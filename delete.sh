@@ -2,9 +2,15 @@
 
 set -e
 
-cluster_name="my-eks-cluster"
-account_id=$(aws sts get-caller-identity --query Account --output text)
-cluster_vpc_id="vpc-0c4a7175fdcc78062"
+if [ $# -ne 3 ]; then
+  echo "Usage: $0 <cluster-name> <region> <account-id>"
+  exit 1
+fi
+
+cluster_name=$1
+region=$2
+account_id=$3
+
 echo "=== Uninstalling AWS Load Balancer Controller ==="
 helm uninstall aws-load-balancer-controller -n kube-system || echo "Helm release not found"
 
