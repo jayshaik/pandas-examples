@@ -2,10 +2,15 @@
 
 set -e
 
-cluster_name="my-eks-cluster"
-account_id=$(aws sts get-caller-identity --query Account --output text)
-region="us-east-2"
-cluster_vpc_id="vpc-0c4a7175fdcc78062"
+if [ $# -ne 4 ]; then
+  echo "Usage: $0 <cluster-name> <region> <vpc-id> <account-id>"
+  exit 1
+fi
+
+cluster_name=$1
+region=$2
+cluster_vpc_id=$3
+account_id=$4
 
 echo "=== Getting OIDC ID for cluster: $cluster_name ==="
 oidc_id=$(aws eks describe-cluster --name $cluster_name --query "cluster.identity.oidc.issuer" --output text | cut -d '/' -f 5)
